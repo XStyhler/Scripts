@@ -5,7 +5,7 @@
 #
 # ------------------------------------------------------------------------------------------
 write-host "Disable Services"
-$services = @("BITS","BTAGService","bthserv","lfsvc","DiagTrack","HvHost","vmickvpexchange","vmicguestinterface","vmicshutdown","vmicheartbeat","vmicvmsession","vmicrdv","vmictimesync","vmicvss","PhoneSvc","Spooler","QWAVE","SysMain","WSearch","termService","dmwappushservice","DiagTrack")
+$services = @("BITS","BTAGService","bthserv","lfsvc","DiagTrack","HvHost","vmickvpexchange","vmicguestinterface","vmicshutdown","vmicheartbeat","vmicvmsession","vmicrdv","vmictimesync","vmicvss","PhoneSvc","Spooler","QWAVE","SysMain","WSearch","termService","dmwappushservice","DiagTrack","RemoteRegistry")
 foreach($s in $services) {
     Get-Service $s | FT Displayname,Status -HideTableHeader
     Get-Service $s | Set-Service -StartupType Disabled
@@ -20,18 +20,21 @@ foreach($app in $Applist) {
     Get-AppxPackage -AllUsers $app | Remove-AppxPackage
 }
 
-<#write-host "Remove GameBar and all the Glory that comes with it"
-Get-AppxPackage -AllUsers Microsoft.XboxGamingOverlay | Remove-AppxPackage
-set-ItemProperty -Path "HKLM:SOFTWARE\Classes\ms-gamebar\" -Type String -Name "NoOpenWith" -Value " "
-set-ItemProperty -Path "HKLM:SOFTWARE\Classes\ms-gamebar\" -Type String -Name "URL Protocol" -Value " "
-set-ItemProperty -Path "HKLM:SOFTWARE\Classes\ms-gamebar\shell\open\command\" -Type String -Name "(default)" -Value "$env:SystemRoot\System32\systray.exe"
-set-ItemProperty -Path "HKLM:SOFTWARE\Classes\ms-ms-gamebarservices\" -Type String -Name "NoOpenWith" -Value " "
-set-ItemProperty -Path "HKLM:SOFTWARE\Classes\ms-ms-gamebarservices\" -Type String -Name "URL Protocol" -Value " "
-set-ItemProperty -Path "HKLM:SOFTWARE\Classes\ms-ms-gamebarservices\shell\open\command\" -Type String -Name "(default)" -Value "$env:SystemRoot\System32\systray.exe"
-#>
 # ------------------------------------------------------------------------------------------
 Write-Host "VM platform Disable"
-Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-Hypervisor
+#Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-Hypervisor
+Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -NoRestart
+Disable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart
+Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
+Disable-WindowsOptionalFeature -Online -FeatureName HypervisorPlatform -NoRestart
+# ------------------------------------------------------------------------------------------
+Write-Host "Disable Optional Stuff"
+Disable-WindowsOptionalFeature -Online -FeatureName Internet-Explorer-Optional-amd64 -NoRestart
+Disable-WindowsOptionalFeature -Online -FeatureName Printing-PrintToPDFServices-Features -NoRestart
+Disable-WindowsOptionalFeature -Online -FeatureName Printing-XPSServices-Features -NoRestart
+Disable-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client -NoRestart
+
+Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart
 # ------------------------------------------------------------------------------------------
 write-host "Deactivate Devices"
 #$devices = @("Enumerator für virtuelle NDIS-Netzwerkadapter","Microsoft virtueller Datenträgerenumerator","Redirector-Bus für Remotedesktop-Gerät")
