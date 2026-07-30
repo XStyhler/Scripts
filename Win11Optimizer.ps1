@@ -14,7 +14,7 @@ foreach($s in $services) {
 
 # ------------------------------------------------------------------------------------------
 write-host "Remove Apps"
-$applist = @("Microsoft.ZuneMusic","Microsoft.BingNews","Microsoft.BingSearch","Microsoft.BingWeather","Microsoft.MicrosoftSolitaireCollection","Microsoft.YourPhone","*Webexperience*")
+$applist = @("Microsoft.ZuneMusic","Microsoft.BingNews","Microsoft.BingSearch","Microsoft.BingWeather","Microsoft.MicrosoftSolitaireCollection","Microsoft.YourPhone","*Webexperience*","Microsoft.CoPilot")
 
 foreach($app in $Applist) {
     Get-AppxPackage -AllUsers $app | Remove-AppxPackage
@@ -39,6 +39,7 @@ Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart
 write-host "Deactivate Devices"
 #$devices = @("Enumerator für virtuelle NDIS-Netzwerkadapter","Microsoft virtueller Datenträgerenumerator","Redirector-Bus für Remotedesktop-Gerät")
 $devices = @("ROOT\NDISVIRTUALBUS\0000","ROOT\VDRVROOT\0000","ROOT\RDPBUS\0000","ACPI\PNP0103\*") #,"ACPI\PNP0103\*" <-- "Hochpräzisionsereigniszeitgeber"
+
 foreach($d in $devices) {
     Get-PnpDevice $d | ft InstanceID,Friendlyname -HideTableHeader
     Get-PnpDevice -InstanceId $d | Disable-PnpDevice -Confirm:$false
