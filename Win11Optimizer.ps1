@@ -116,7 +116,7 @@ $ob = @{
     Path = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games"
     Type = "String"
     Name = "Background Only"
-    Value = false
+    Value = "false"
 }
 $regkeylist += $ob
 
